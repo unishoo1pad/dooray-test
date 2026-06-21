@@ -10,7 +10,7 @@ jobs:
       - name: Send test mail via Dooray API
         run: |
           response=$(curl -s -w "\n%{http_code}" -X POST \
-            "https://dbsec.dooray.com/mail/v1/mails" \
+            "https://dbsec.dooray.com/api/v1/mails" \
             -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{
