@@ -7,15 +7,15 @@ jobs:
   send:
     runs-on: ubuntu-latest
     steps:
-      - name: Follow redirects on mail endpoints
+      - name: Test token with member info API
         run: |
-          echo "=== /mail/v1/mailboxes (follow redirect) ==="
-          curl -sL -w "\nHTTP: %{http_code}\nURL: %{url_effective}\n" \
+          echo "=== 현재 사용자 정보 ==="
+          curl -s -w "\nHTTP: %{http_code}" \
             -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
-            https://dbsec.dooray.com/mail/v1/mailboxes
+            https://dbsec.dooray.com/api/v1/members/me
 
           echo ""
-          echo "=== /mail/v1/mails (follow redirect) ==="
-          curl -sL -w "\nHTTP: %{http_code}\nURL: %{url_effective}\n" \
+          echo "=== 프로젝트 목록 ==="
+          curl -s -w "\nHTTP: %{http_code}" \
             -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
-            https://dbsec.dooray.com/mail/v1/mails
+            https://dbsec.dooray.com/project/v1/projects
