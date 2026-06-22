@@ -1,0 +1,27 @@
+name: Test Dooray Drive API
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 드라이브 API 탐색
+        run: |
+          echo "=== Drive v1 my drives ==="
+          curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
+            "https://dbsec.dooray.com/drive/v1/members/me/drives" || true
+
+          echo ""
+          echo "=== Drive v1 files ==="
+          curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
+            "https://dbsec.dooray.com/drive/v1/files?size=5" || true
+
+          echo ""
+          echo "=== Drive v2 ==="
+          curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
+            "https://dbsec.dooray.com/drive/v2/members/me/drives" || true
