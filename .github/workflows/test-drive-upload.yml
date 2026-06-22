@@ -7,21 +7,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: 드라이브 API 탐색
+      - name: 드라이브 API 탐색 (리다이렉트 추적)
         run: |
-          echo "=== Drive v1 my drives ==="
-          curl -s -w "\nHTTP_STATUS:%{http_code}" \
+          echo "=== Drive v1 my drives (follow redirect) ==="
+          curl -sL -w "\nHTTP_STATUS:%{http_code}" \
             -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
-            "https://dbsec.dooray.com/drive/v1/members/me/drives" || true
+            "https://dbsec.dooray.com/drive/v1/members/me/drives" | tail -5
 
           echo ""
-          echo "=== Drive v1 files ==="
-          curl -s -w "\nHTTP_STATUS:%{http_code}" \
+          echo "=== Redirect location ==="
+          curl -si \
             -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
-            "https://dbsec.dooray.com/drive/v1/files?size=5" || true
-
-          echo ""
-          echo "=== Drive v2 ==="
-          curl -s -w "\nHTTP_STATUS:%{http_code}" \
-            -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
-            "https://dbsec.dooray.com/drive/v2/members/me/drives" || true
+            "https://dbsec.dooray.com/drive/v1/members/me/drives" 2>&1 | grep -i "location\|HTTP/"
