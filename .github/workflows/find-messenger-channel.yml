@@ -10,17 +10,21 @@ jobs:
       - name: Get my member info
         run: |
           echo "=== My Member Info ==="
-          curl -s -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
-            https://dbsec.dooray.com/api/v1/members/me | python3 -m json.tool
+          curl -v -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
+            https://dbsec.dooray.com/api/v1/members/me 2>&1 || true
 
       - name: Get my direct message channels
         run: |
           echo "=== Messenger Channels ==="
-          curl -s -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
-            "https://dbsec.dooray.com/messenger/v1/channels?type=direct&page=0&size=10" | python3 -m json.tool
+          curl -v -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
+            "https://dbsec.dooray.com/messenger/v1/channels?type=direct&page=0&size=10" 2>&1 || true
 
-      - name: Get channel list (all)
+      - name: Check secret exists
         run: |
-          echo "=== All Channels ==="
-          curl -s -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
-            "https://dbsec.dooray.com/messenger/v1/channels?page=0&size=10" | python3 -m json.tool
+          if [ -z "${{ secrets.DOORAY_API_TOKEN }}" ]; then
+            echo "DOORAY_API_TOKEN secret is EMPTY or NOT SET"
+          else
+            echo "DOORAY_API_TOKEN is set (length: ${#TOKEN})"
+          fi
+        env:
+          TOKEN: ${{ secrets.DOORAY_API_TOKEN }}
