@@ -1,0 +1,26 @@
+name: Find Dooray Messenger Channel
+
+on:
+  workflow_dispatch:
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get my member info
+        run: |
+          echo "=== My Member Info ==="
+          curl -s -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
+            https://dbsec.dooray.com/api/v1/members/me | python3 -m json.tool
+
+      - name: Get my direct message channels
+        run: |
+          echo "=== Messenger Channels ==="
+          curl -s -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
+            "https://dbsec.dooray.com/messenger/v1/channels?type=direct&page=0&size=10" | python3 -m json.tool
+
+      - name: Get channel list (all)
+        run: |
+          echo "=== All Channels ==="
+          curl -s -H "Authorization: dooray-api ${{ secrets.DOORAY_API_TOKEN }}" \
+            "https://dbsec.dooray.com/messenger/v1/channels?page=0&size=10" | python3 -m json.tool
